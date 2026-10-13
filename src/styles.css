@@ -1979,7 +1979,7 @@ a {
   background: var(--fill);
 }
 
-/* Sombre façon Apple Plans : mêmes tuiles OSM qu'en clair, passées en noir.
+/* Sombre style Leaflet : mêmes tuiles OSM qu'en clair, passées en noir.
    Le filtre vise uniquement les tuiles : pastilles, point bleu et cercle
    gardent leurs couleurs. Contraste renforcé (pas de désaturation forte)
    pour que les noms de quartiers restent lisibles comme en mode clair. */
@@ -1987,7 +1987,16 @@ a {
   background: #0e0f12;
 }
 
+/* Le fond Leaflet (#ddd, chargé après) gagnerait sinon sur le nôtre :
+   le moindre joint d'1 px entre tuiles (transforms 3D + filtre GPU)
+   apparaîtrait comme un trait blanchâtre. Sélecteur renforcé pour que
+   le noir gagne, plus fond noir sur le panneau de tuiles lui-même. */
+:root[data-theme="dark"] .map--dark.leaflet-container {
+  background: #0e0f12;
+}
+
 :root[data-theme="dark"] .map--dark .leaflet-tile-pane {
+  background: #0e0f12;
   filter: invert(1) hue-rotate(180deg) brightness(0.95) contrast(1.08) saturate(0.85);
 }
 

@@ -47,8 +47,8 @@ export default defineConfig({
             },
           },
           {
-            // Tuiles OSM (clair + sombre : mêmes tuiles, le sombre est un
-            // filtre CSS local) : le cache d'abord, elles changent rarement.
+            // Tuiles OSM (clair + sombre style Leaflet : mêmes tuiles, le
+            // sombre est un filtre CSS local) : le cache d'abord.
             urlPattern: ({ url }) => url.hostname === "tile.openstreetmap.org",
             handler: "CacheFirst",
             options: {

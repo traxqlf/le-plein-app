@@ -6,10 +6,10 @@ import { splitPrice } from "../lib/format.js";
 import useDarkMode from "../hooks/useDarkMode.js";
 import useMediaQuery from "../hooks/useMediaQuery.js";
 
-// Un seul fournisseur : OpenStreetMap (gratuit, sans clé, sans compte).
-// En sombre, les mêmes tuiles sont recolorées en noir via `.map--dark`
-// (voir styles.css) : aucun autre serveur contacté, donc aucun message
-// de clé API possible. Mêmes données qu'en clair → mêmes quartiers.
+// Un seul fournisseur : OpenStreetMap, style Leaflet d'origine en clair
+// comme en sombre. En sombre, les mêmes tuiles sont passées en noir via
+// `.map--dark` (voir styles.css) : gratuit, sans clé, sans compte, et
+// strictement le même niveau de détail qu'en clair (mêmes tuiles).
 const OSM_URL = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
 
 // Point bleu de la position de l'utilisateur (toujours au-dessus des pastilles de prix).
@@ -62,8 +62,8 @@ function PanToSelected({ station }) {
 
 export default function StationMap({ place, radiusKm, stations, brands, cheapestId, selectedId, hoverId, onSelect, active }) {
   // Fond de carte assorti au thème, bascule instantanée au toggle.
-  // Clair et sombre : mêmes tuiles OSM. En sombre, `.map--dark` les passe
-  // en noir façon Apple Plans (pastilles de prix non touchées).
+  // Clair et sombre : mêmes tuiles OSM style Leaflet. En sombre, `.map--dark`
+  // les passe en noir (pastilles de prix non touchées).
   const dark = useDarkMode();
   // PC : zoom en haut à gauche comme avant ; mobile : en bas à droite pour
   // libérer le haut au bandeau de rayon.
