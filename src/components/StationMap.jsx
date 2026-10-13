@@ -6,11 +6,11 @@ import { splitPrice } from "../lib/format.js";
 import useDarkMode from "../hooks/useDarkMode.js";
 import useMediaQuery from "../hooks/useMediaQuery.js";
 
-// Clé CARTO optionnelle (.env -> VITE_CARTO_API_KEY, figée au build, jamais
-// committée — voir .env.example). Ajoutée en ?key= (nom officiel CARTO)
-// quand elle est définie, sinon tuiles anonymes (filigrane possible sans clé).
-const CARTO_KEY = import.meta.env.VITE_CARTO_API_KEY;
-const CARTO_DARK_URL = `https://{s}.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}{r}.png${CARTO_KEY ? `?key=${encodeURIComponent(CARTO_KEY)}` : ""}`;
+// Un seul fournisseur : OpenStreetMap (gratuit, sans clé, sans compte).
+// En sombre, les mêmes tuiles sont recolorées en noir via `.map--dark`
+// (voir styles.css) : aucun autre serveur contacté, donc aucun message
+// de clé API possible. Mêmes données qu'en clair → mêmes quartiers.
+const OSM_URL = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
 
 // Point bleu de la position de l'utilisateur (toujours au-dessus des pastilles de prix).
 const hereIcon = L.divIcon({
@@ -62,8 +62,8 @@ function PanToSelected({ station }) {
 
 export default function StationMap({ place, radiusKm, stations, brands, cheapestId, selectedId, hoverId, onSelect, active }) {
   // Fond de carte assorti au thème, bascule instantanée au toggle.
-  // Sombre : CARTO Dark Matter (dark_all), avec ?api_key= si VITE_CARTO_API_KEY
-  // est définie dans .env. Clair : OpenStreetMap, inchangé.
+  // Clair et sombre : mêmes tuiles OSM. En sombre, `.map--dark` les passe
+  // en noir façon Apple Plans (pastilles de prix non touchées).
   const dark = useDarkMode();
   // PC : zoom en haut à gauche comme avant ; mobile : en bas à droite pour
   // libérer le haut au bandeau de rayon.
@@ -85,7 +85,7 @@ export default function StationMap({ place, radiusKm, stations, brands, cheapest
 
   return (
     <MapContainer
-      className="map"
+      className={`map${dark ? " map--dark" : ""}`}
       center={[place.lat, place.lon]}
       zoom={13}
       scrollWheelZoom
@@ -93,13 +93,8 @@ export default function StationMap({ place, radiusKm, stations, brands, cheapest
     >
       <ZoomControl position={zoomPosition} />
       <TileLayer
-        attribution={
-          dark
-            ? '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
-            : '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        }
-        url={dark ? CARTO_DARK_URL : "https://tile.openstreetmap.org/{z}/{x}/{y}.png"}
-        subdomains={dark ? "abcd" : "abc"}
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        url={OSM_URL}
         maxZoom={19}
       />
       <Circle

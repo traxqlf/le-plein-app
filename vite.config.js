@@ -42,21 +42,12 @@ export default defineConfig({
             },
           },
           {
-            // Tuiles de la carte : le cache d'abord, elles changent rarement.
+            // Tuiles OSM (clair + sombre : mêmes tuiles, le sombre est un
+            // filtre CSS local) : le cache d'abord, elles changent rarement.
             urlPattern: ({ url }) => url.hostname === "tile.openstreetmap.org",
             handler: "CacheFirst",
             options: {
               cacheName: "osm-tiles",
-              expiration: { maxEntries: 300, maxAgeSeconds: 60 * 60 * 24 * 14 },
-              cacheableResponse: { statuses: [0, 200] },
-            },
-          },
-          {
-            // Fond sombre CARTO (dark mode) : mêmes règles que les tuiles OSM.
-            urlPattern: ({ url }) => url.hostname.endsWith("basemaps.cartocdn.com"),
-            handler: "CacheFirst",
-            options: {
-              cacheName: "carto-tiles",
               expiration: { maxEntries: 300, maxAgeSeconds: 60 * 60 * 24 * 14 },
               cacheableResponse: { statuses: [0, 200] },
             },

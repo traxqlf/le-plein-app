@@ -1979,20 +1979,20 @@ a {
   background: var(--fill);
 }
 
-/* Aura bleue qui descend du haut de la carte (ne bloque aucun toucher). */
-.map-wrap::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 500;
-  pointer-events: none;
-  box-shadow: inset 0 28px 28px -22px color-mix(in srgb, var(--blue) 40%, transparent);
+/* Sombre façon Apple Plans : mêmes tuiles OSM qu'en clair, passées en noir.
+   Le filtre vise uniquement les tuiles : pastilles, point bleu et cercle
+   gardent leurs couleurs. Contraste renforcé (pas de désaturation forte)
+   pour que les noms de quartiers restent lisibles comme en mode clair. */
+.map--dark {
+  background: #0e0f12;
 }
 
-/* Dark : pas de halo/lueur bleue en haut de la carte, mobile comme PC. */
-:root[data-theme="dark"] .map-wrap::after {
-  box-shadow: none;
+:root[data-theme="dark"] .map--dark .leaflet-tile-pane {
+  filter: invert(1) hue-rotate(180deg) brightness(0.95) contrast(1.08) saturate(0.85);
 }
+
+/* Pas de halo intérieur en haut de la carte (clair comme sombre) : seul le
+   halo extérieur du conteneur entoure la carte sur les 4 côtés. */
 
 .map-empty {
   padding: 32px var(--gutter);
@@ -2537,19 +2537,18 @@ a {
     /* Carte flottante : glow premium parfaitement symétrique (offsets 0 0).
        Porté par le conteneur interne arrondi : il épouse exactement les
        coins (radius 20) sans être rogné par le parent (overflow visible).
-       Triple couche centrée : liseré + halo proche + halo large diffus
-       (48 px max pour tenir dans la gouttière). */
+       Triple couche centrée : liseré + halo proche + halo large diffus. */
     box-shadow:
-      0 0 0 1px color-mix(in srgb, var(--blue) 16%, transparent),
-      0 0 26px 0 color-mix(in srgb, var(--blue) 18%, transparent),
-      0 0 48px 0 color-mix(in srgb, var(--blue) 12%, transparent) !important;
+      0 0 0 1px color-mix(in srgb, var(--blue) 22%, transparent),
+      0 0 32px 0 color-mix(in srgb, var(--blue) 25%, transparent),
+      0 0 58px 0 color-mix(in srgb, var(--blue) 16%, transparent) !important;
   }
 
   :root[data-theme="dark"] .map-wrap {
     box-shadow:
-      0 0 0 1px color-mix(in srgb, var(--blue) 24%, transparent),
-      0 0 28px 0 color-mix(in srgb, var(--blue) 30%, transparent),
-      0 0 52px 0 color-mix(in srgb, var(--blue) 18%, transparent) !important;
+      0 0 0 1px color-mix(in srgb, var(--blue) 32%, transparent),
+      0 0 34px 0 color-mix(in srgb, var(--blue) 40%, transparent),
+      0 0 62px 0 color-mix(in srgb, var(--blue) 24%, transparent) !important;
   }
 
   /* PC : carte comme avant — pas de pastille rayon (réservée au mobile). */
