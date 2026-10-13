@@ -15,7 +15,7 @@ import {
 } from "./calc.js";
 import { normalizeTheme, resolveTheme, nextTheme } from "./theme.js";
 import { ACCENTS, DEFAULT_ACCENT, normalizeAccent } from "./accent.js";
-import { fetchOsmTagsForStations } from "./osm.js";
+import { fetchOsmTagsForStations, buildQuery } from "./osm.js";
 
 const record = {
   id: 11000001,
@@ -249,7 +249,21 @@ test("carburants : chaque carburant a sa couleur officielle", () => {
   assert.deepEqual(fuelColors("inconnu"), { bg: "#6b7280", fg: "#ffffff" });
 });
 
-test("enseignes OSM : appariement ref + proximité, rappel par morceau", async () => {
+test("overpass : requête unique en boîte englobante (sud,ouest,nord,est)", () => {
+  const q = buildQuery([
+    { id: "a", lat: 48.86, lon: 2.35 },
+    { id: "b", lat: 48.85, lon: 2.36 },
+  ]);
+  assert.doesNotMatch(q, /around/, "plus de clauses around par station");
+  const m = q.match(/node\[amenity=fuel\]\(([^)]+)\);way\[amenity=fuel\]\(([^)]+)\)/);
+  assert.ok(m, "boîte appliquée aux nodes et aux ways");
+  assert.equal(m[1], m[2], "même boîte des deux côtés");
+  const [s, w, n, e] = m[1].split(",").map(Number);
+  assert.ok(s < 48.85 && n > 48.86 && w < 2.35 && e > 2.36, "marge de 700 m autour des stations");
+  assert.ok(Math.abs((n - s) * 111320 - (0.01 * 111320 + 1400)) < 1, "hauteur = étendue + 2 marges");
+});
+
+test("enseignes OSM : appariement ref + proximité, rappel unique", async () => {
   const canned = {
     elements: [
       {
@@ -284,7 +298,7 @@ test("enseignes OSM : appariement ref + proximité, rappel par morceau", async (
     assert.equal(found.get("75001003")?.brand, "TotalEnergies");
     // …repli sur l'objet le plus proche (200 m max, ici 0 m).
     assert.equal(found.get("69009003")?.operator, "Intermarché");
-    // Un seul morceau (< 40 stations), notifié aussitôt au lieu d'attendre.
+    // Un seul appel réseau (boîte englobante) → un seul rappel avec tout dedans.
     assert.equal(chunks.length, 1);
     assert.equal(chunks[0].get("75001003")?.brand, "TotalEnergies");
     assert.deepEqual(await fetchOsmTagsForStations([], undefined), new Map());
