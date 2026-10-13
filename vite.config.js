@@ -5,6 +5,11 @@ import { VitePWA } from "vite-plugin-pwa";
 // Si vous publiez sur GitHub Pages dans un sous-dossier (https://user.github.io/mon-repo/),
 // mettez base: "/mon-repo/" ici ET start_url / scope dans le manifest ci-dessous.
 export default defineConfig({
+  server: {
+    // Dev local : /api redirigé vers la prod (même comportement que Vercel ;
+    // si injoignable, le client bascule silencieusement sur l'accès direct).
+    proxy: { "/api": { target: "https://le-plein.vercel.app", changeOrigin: true } },
+  },
   plugins: [
     react(),
     VitePWA({

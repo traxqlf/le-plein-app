@@ -283,7 +283,11 @@ test("enseignes OSM : appariement ref + proximité, rappel unique", async () => 
     ],
   };
   const realFetch = globalThis.fetch;
-  globalThis.fetch = async () => ({ ok: true, json: async () => canned });
+  const seenUrls = [];
+  globalThis.fetch = async (url) => {
+    seenUrls.push(String(url));
+    return { ok: true, json: async () => canned };
+  };
   try {
     const chunks = [];
     const found = await fetchOsmTagsForStations(
@@ -298,6 +302,8 @@ test("enseignes OSM : appariement ref + proximité, rappel unique", async () => 
     assert.equal(found.get("75001003")?.brand, "TotalEnergies");
     // …repli sur l'objet le plus proche (200 m max, ici 0 m).
     assert.equal(found.get("69009003")?.operator, "Intermarché");
+    // Proxy même-origine interrogé en premier, avant les accès directs.
+    assert.ok(seenUrls[0].startsWith("/api/overpass?data="), `proxy d'abord, vu : ${seenUrls[0]}`);
     // Un seul appel réseau (boîte englobante) → un seul rappel avec tout dedans.
     assert.equal(chunks.length, 1);
     assert.equal(chunks[0].get("75001003")?.brand, "TotalEnergies");

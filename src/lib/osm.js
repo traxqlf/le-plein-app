@@ -21,6 +21,11 @@ const OVERPASS_ENDPOINTS = [
 ];
 const CACHE_KEY = "leplein:osm-brands:v1";
 const CACHE_TTL_MS = 30 * 24 * 3600 * 1000;
+// Proxy même-origine (fonction serverless, voir /api/overpass.js) : la requête
+// part du réseau de Vercel au lieu du navigateur, ce qui contourne les réseaux
+// où l'accès direct est refusé (406 sans CORS, files d'attente). En dev local,
+// /api n'existe pas : l'échec est silencieux et on passe aux accès directs.
+const PROXY_PATH = "/api/overpass";
 // Marge autour de la boîte englobante : les coordonnées officielles sont
 // parfois arrondies à ~500 m près. L'appariement se fait d'abord par
 // identifiant officiel (tag OSM `ref:FR:prix-carburants`), la distance
@@ -104,6 +109,24 @@ async function postQuery(url, body, signal) {
   }
 }
 
+async function fetchViaProxy(query, signal) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+  const onAbort = () => controller.abort();
+  signal?.addEventListener("abort", onAbort);
+  try {
+    const res = await fetch(`${PROXY_PATH}?data=${encodeURIComponent(query)}`, {
+      signal: controller.signal,
+    });
+    if (!res.ok) throw new Error(`Proxy Overpass ${res.status}`);
+    const data = await res.json();
+    return data.elements ?? [];
+  } finally {
+    clearTimeout(timer);
+    signal?.removeEventListener("abort", onAbort);
+  }
+}
+
 function elementLatLon(el) {
   if (Number.isFinite(el.lat) && Number.isFinite(el.lon)) return { lat: el.lat, lon: el.lon };
   if (el.center && Number.isFinite(el.center.lat) && Number.isFinite(el.center.lon)) {
@@ -125,15 +148,24 @@ export async function fetchOsmTagsForStations(stations, signal, onChunk) {
   if (signal?.aborted) return found;
 
   const query = buildQuery(stations);
-  const body = `data=${encodeURIComponent(query)}`;
+  // 1. Proxy même-origine d'abord (réseau Vercel + cache bord).
+  // 2. Repli : accès directs navigateur (rapides quand le réseau client va bien).
   let elements = null;
-  for (const url of OVERPASS_ENDPOINTS) {
-    if (signal?.aborted) break;
-    try {
-      elements = await postQuery(url, body, signal);
-      break; // premier miroir qui répond gagne
-    } catch {
-      /* on tente le miroir suivant, échec silencieux sinon */
+  try {
+    elements = await fetchViaProxy(query, signal);
+  } catch {
+    /* proxy indisponible : on tente les accès directs ci-dessous */
+  }
+  if (!elements && !signal?.aborted) {
+    const body = `data=${encodeURIComponent(query)}`;
+    for (const url of OVERPASS_ENDPOINTS) {
+      if (signal?.aborted) break;
+      try {
+        elements = await postQuery(url, body, signal);
+        break; // premier miroir qui répond gagne
+      } catch {
+        /* on tente le miroir suivant, échec silencieux sinon */
+      }
     }
   }
   if (!elements) return found;

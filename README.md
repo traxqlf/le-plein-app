@@ -19,6 +19,12 @@ npm run dev          # serveur de dev sur http://localhost:5173
 npm test             # tests unitaires (normalisation des données, prix, distances)
 npm run build        # construit le site dans dist/
 npm run preview      # sert dist/ (le service worker PWA n'existe qu'en build)
+
+Pour mettre à jour le site
+  git add .
+  git commit -m "Mise à jour du site"
+  git push
+
 ```
 
 ## Publier sur internet
