@@ -17,7 +17,7 @@ export function parseDecimalInput(value) {
 }
 
 /** Arrondi au centime (ce que paie vraiment l'automobiliste). */
-export const roundCents = (n) => Math.round(n * 100) / 100;
+const roundCents = (n) => Math.round(n * 100) / 100;
 
 /** Coût en € pour un volume en L à un prix au litre. */
 export function costForLiters(liters, price) {

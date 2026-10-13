@@ -13,7 +13,7 @@ import {
   formatLiters,
   formatEuros,
 } from "./calc.js";
-import { normalizeTheme, resolveTheme, nextTheme } from "./theme.js";
+import { normalizeTheme, resolveTheme, nextTheme, setThemeMetaColor } from "./theme.js";
 import { ACCENTS, DEFAULT_ACCENT, normalizeAccent } from "./accent.js";
 import { fetchOsmTagsForStations, buildQuery } from "./osm.js";
 
@@ -216,6 +216,7 @@ test("thème : normalisation, résolution et rotation", () => {
   assert.equal(nextTheme("light"), "dark");
   assert.equal(nextTheme("dark"), "system");
   assert.equal(nextTheme("inconnu"), "light"); // périmé -> repart sur clair
+  assert.doesNotThrow(() => setThemeMetaColor("#000000"), "sans DOM (node) : silencieux");
 });
 
 test("accent : 5 couleurs normalisées", () => {

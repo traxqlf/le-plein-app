@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
+import { Analytics } from "@vercel/analytics/react";
 import { DEFAULT_FUEL, FUELS, fuelLabel } from "./lib/fuels.js";
 import { formatAge, elideDe } from "./lib/format.js";
 import { haversineKm } from "./lib/geo.js";
-import { normalizeTheme, resolveTheme, nextTheme, THEME_LABELS, THEME_META_COLORS } from "./lib/theme.js";
+import { normalizeTheme, resolveTheme, nextTheme, THEME_LABELS, THEME_META_COLORS, setThemeMetaColor } from "./lib/theme.js";
 import usePersistentState from "./hooks/usePersistentState.js";
 import useLocation from "./hooks/useLocation.js";
 import useStations from "./hooks/useStations.js";
@@ -83,9 +84,7 @@ export default function App() {
     const apply = () => {
       const resolved = resolveTheme(themeMode, media.matches);
       document.documentElement.dataset.theme = resolved;
-      document
-        .querySelector('meta[name="theme-color"]')
-        ?.setAttribute("content", THEME_META_COLORS[resolved]);
+      setThemeMetaColor(THEME_META_COLORS[resolved]);
     };
     apply();
     if (themeMode === "system") {
@@ -473,6 +472,7 @@ export default function App() {
           onClose={() => setCalcOpen(false)}
         />
       )}
+      <Analytics />
     </div>
   );
 }

@@ -5,7 +5,6 @@
    ========================================================================== */
 
 :root {
-  --system-bg: #f2f2f7;
   --grouped-bg: #f2f2f7;
   --card: #ffffff;
   --card-2: #f6f6f8;
@@ -24,7 +23,6 @@
   --orange-soft: rgba(255, 149, 0, 0.14);
   --red: #ff3b30;
   --red-soft: rgba(255, 59, 48, 0.1);
-  --gray-soft: rgba(120, 120, 128, 0.12);
 
   --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
     "Helvetica Neue", Inter, system-ui, "Segoe UI", Roboto, sans-serif;
@@ -50,7 +48,6 @@
    l'appareil quand aucun choix n'est fait (voir le script anti-flash de
    index.html et l'effet thème de App.jsx). */
 :root[data-theme="dark"] {
-  --system-bg: #000000;
   --grouped-bg: #000000;
   --card: #1c1c1e;
   --card-2: #2c2c2e;
@@ -63,7 +60,6 @@
   --blue: #0a84ff;
   --blue-pressed: #41a1ff;
   --blue-soft: rgba(10, 132, 255, 0.22);
-  --gray-soft: rgba(120, 120, 128, 0.24);
   --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 10px 28px rgba(0, 0, 0, 0.45);
   --shadow-pop: 0 12px 40px rgba(0, 0, 0, 0.6);
 

@@ -8,7 +8,7 @@
       name="description"
       content="Prix officiels et ruptures de stock des stations-service autour de vous, actualisés toutes les 10 minutes."
     />
-    <meta name="theme-color" content="#f2f2f7" />
+    <meta name="theme-color" content="#ffffff" />
     <script>
       /* Thème + accent appliqués avant le premier rendu : évite un flash.
          Même logique que src/lib/theme.js et src/lib/accent.js. */
@@ -18,9 +18,12 @@
           lpTheme === "dark" ||
           (lpTheme !== "light" && window.matchMedia("(prefers-color-scheme: dark)").matches);
         document.documentElement.dataset.theme = lpDark ? "dark" : "light";
-        document
-          .querySelector('meta[name="theme-color"]')
-          .setAttribute("content", lpDark ? "#000000" : "#f2f2f7");
+        var lpMeta = document.createElement("meta");
+        lpMeta.name = "theme-color";
+        lpMeta.content = lpDark ? "#000000" : "#ffffff";
+        var lpPrev = document.querySelector('meta[name="theme-color"]');
+        if (lpPrev) lpPrev.replaceWith(lpMeta);
+        else document.head.appendChild(lpMeta);
         var lpAccent = JSON.parse(localStorage.getItem("leplein:accent") || '"blue"');
         if (["blue", "purple", "pink", "orange", "green"].indexOf(lpAccent) !== -1) {
           document.documentElement.dataset.accent = lpAccent;
