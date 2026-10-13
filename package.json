@@ -1,0 +1,29 @@
+{
+  "name": "le-plein",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "PWA : prix et disponibilité des carburants autour de vous (données officielles data.economie.gouv.fr)",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview --host",
+    "test": "node --test \"src/**/*.test.js\""
+  },
+  "dependencies": {
+    "@fontsource/barlow": "^5.3.0",
+    "@fontsource/barlow-condensed": "^5.3.0",
+    "leaflet": "^1.9.4",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "react-leaflet": "^5.0.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.1.1",
+    "vite": "^8.3.0",
+    "vite-plugin-pwa": "^1.3.0"
+  },
+  "engines": {
+    "node": ">=20.19"
+  }
+}

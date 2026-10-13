@@ -1,0 +1,2600 @@
+/* ==========================================================================
+   Le Plein — Apple style
+   Human Interface Guidelines : fond système, cartes blanches arrondies,
+   blur translucide, SF Pro, bleu système #007AFF, large title.
+   ========================================================================== */
+
+:root {
+  --system-bg: #f2f2f7;
+  --grouped-bg: #f2f2f7;
+  --card: #ffffff;
+  --card-2: #f6f6f8;
+  --label: #111114;
+  --label-2: rgba(60, 60, 67, 0.6);
+  --label-3: rgba(60, 60, 67, 0.35);
+  --separator: rgba(60, 60, 67, 0.12);
+  --fill: rgba(120, 120, 128, 0.12);
+  --fill-2: rgba(120, 120, 128, 0.18);
+  --blue: #007aff;
+  --blue-pressed: #0a64d2;
+  --blue-soft: rgba(0, 122, 255, 0.12);
+  --green: #34c759;
+  --green-soft: rgba(52, 199, 89, 0.14);
+  --orange: #ff9500;
+  --orange-soft: rgba(255, 149, 0, 0.14);
+  --red: #ff3b30;
+  --red-soft: rgba(255, 59, 48, 0.1);
+  --gray-soft: rgba(120, 120, 128, 0.12);
+
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
+    "Helvetica Neue", Inter, system-ui, "Segoe UI", Roboto, sans-serif;
+  --font-rounded: ui-rounded, -apple-system, BlinkMacSystemFont, "SF Pro Rounded",
+    "SF Pro Text", system-ui, sans-serif;
+
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 20px;
+  --r-xl: 24px;
+
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.06);
+  --shadow-pop: 0 8px 30px rgba(0, 0, 0, 0.14);
+  --nav-blur: saturate(180%) blur(20px);
+
+  --gutter: 16px;
+  --max: 72rem;
+
+  color-scheme: light;
+}
+
+/* Thème sombre : choix manuel prioritaire (`data-theme="dark"`), sinon
+   l'appareil quand aucun choix n'est fait (voir le script anti-flash de
+   index.html et l'effet thème de App.jsx). */
+:root[data-theme="dark"] {
+  --system-bg: #000000;
+  --grouped-bg: #000000;
+  --card: #1c1c1e;
+  --card-2: #2c2c2e;
+  --label: #ffffff;
+  --label-2: rgba(235, 235, 245, 0.6);
+  --label-3: rgba(235, 235, 245, 0.35);
+  --separator: rgba(84, 84, 88, 0.45);
+  --fill: rgba(120, 120, 128, 0.24);
+  --fill-2: rgba(120, 120, 128, 0.32);
+  --blue: #0a84ff;
+  --blue-pressed: #41a1ff;
+  --blue-soft: rgba(10, 132, 255, 0.22);
+  --gray-soft: rgba(120, 120, 128, 0.24);
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 10px 28px rgba(0, 0, 0, 0.45);
+  --shadow-pop: 0 12px 40px rgba(0, 0, 0, 0.6);
+
+  color-scheme: dark;
+}
+
+/* ---------- Couleurs d'accent (`data-accent`, choix mémorisé) ----------
+   Seules les 3 teintes dérivées du bleu sont redéfinies ; tout le reste
+   (ombres d'ambiance, dégradé hero) garde son identité bleue. */
+
+:root[data-accent="purple"] {
+  --blue: #af52de;
+  --blue-pressed: #9338c4;
+  --blue-soft: rgba(175, 82, 222, 0.14);
+}
+
+:root[data-accent="pink"] {
+  --blue: #ff2d55;
+  --blue-pressed: #d62447;
+  --blue-soft: rgba(255, 45, 85, 0.14);
+}
+
+:root[data-accent="orange"] {
+  --blue: #ff9500;
+  --blue-pressed: #d67e00;
+  --blue-soft: rgba(255, 149, 0, 0.16);
+}
+
+:root[data-accent="green"] {
+  --blue: #34c759;
+  --blue-pressed: #28a745;
+  --blue-soft: rgba(52, 199, 89, 0.16);
+}
+
+:root[data-theme="dark"][data-accent="purple"] {
+  --blue: #bf5af2;
+  --blue-pressed: #d68bff;
+  --blue-soft: rgba(191, 90, 242, 0.25);
+}
+
+:root[data-theme="dark"][data-accent="pink"] {
+  --blue: #ff375f;
+  --blue-pressed: #ff6b8b;
+  --blue-soft: rgba(255, 55, 95, 0.25);
+}
+
+:root[data-theme="dark"][data-accent="orange"] {
+  --blue: #ff9f0a;
+  --blue-pressed: #ffb340;
+  --blue-soft: rgba(255, 159, 10, 0.25);
+}
+
+:root[data-theme="dark"][data-accent="green"] {
+  --blue: #30d158;
+  --blue-pressed: #5be07f;
+  --blue-soft: rgba(48, 209, 88, 0.25);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Verrouillage global anti-scroll (iOS compris : overflow seul sur body ne
+   suffit pas sur Safari mobile, d'où position: fixed conservé) : la page
+   globale ne peut plus défiler. Seul le panneau de liste (overflow-y: auto)
+   défile, via panel.scrollTo() uniquement (scrollIntoView banni). */
+html,
+body {
+  height: 100vh;
+  overflow: hidden !important;
+  position: fixed;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(900px 320px at 50% -120px, color-mix(in srgb, var(--blue) 10%, transparent), transparent 70%),
+    var(--grouped-bg);
+  color: var(--label);
+  font-family: var(--font);
+  font-size: 1rem;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--blue) 28%, transparent);
+}
+
+button,
+input {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  transition: transform 0.12s ease, background-color 0.15s ease, opacity 0.15s ease;
+}
+
+button:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+button:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+h1,
+h2,
+p,
+ul,
+table {
+  margin: 0;
+}
+
+ul {
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  color: var(--blue);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 2px;
+  border-radius: 6px;
+  box-shadow: 0 0 0 5px var(--blue-soft);
+}
+
+/* ---------- Structure ---------- */
+
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  height: 100dvh;
+  max-width: var(--max);
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.layout {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.panel {
+  min-height: 0;
+}
+
+.panel--list {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Seule zone à défiler : l'en-tête (chips + filtres) est hors scroll, donc
+   fixe par construction — aucun sticky fragile. Scroll indépendant, sans
+   propagation à la page (contain), sur mobile comme sur ordinateur. */
+.list-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  padding-bottom: 88px; /* barre d'onglets (~60-84 px) + filet d'air : le texte descend près de la barre sans passer dessous */
+}
+
+.panel--map {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.view-list .panel--map,
+.view-map .panel--list {
+  display: none;
+}
+
+/* ---------- Barre de navigation Apple ---------- */
+
+.topbar {
+  /* Relative, jamais sticky : tout est figé (la coquille ne scrolle pas),
+     mais le contexte d'empilement (menus déroulants) est préservé.
+     Aucune barre de séparation sous l'en-tête. */
+  position: relative;
+  z-index: 50;
+  background: color-mix(in srgb, var(--grouped-bg) 78%, transparent);
+  -webkit-backdrop-filter: var(--nav-blur);
+  backdrop-filter: var(--nav-blur);
+  border-bottom: 0;
+  padding:
+    max(10px, env(safe-area-inset-top))
+    max(var(--gutter), env(safe-area-inset-right))
+    12px
+    max(var(--gutter), env(safe-area-inset-left));
+}
+
+.topbar__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.brand {
+  font-family: var(--font);
+  font-weight: 800;
+  font-size: 2.1rem;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  /* Garde-fou : le titre ne pousse jamais les boutons hors de l'écran. */
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.brand::after {
+  content: ".";
+  color: var(--blue);
+}
+
+.topbar__refresh {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 34px;
+  max-width: 100%;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--fill);
+  color: var(--label-2);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.topbar__refresh svg {
+  width: 15px;
+  height: 15px;
+  color: var(--blue);
+}
+
+.topbar__refresh:disabled {
+  opacity: 0.7;
+}
+
+.topbar__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.topbar__theme {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  min-width: 40px;
+  min-height: 34px;
+  padding: 0 9px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--fill);
+  color: var(--blue);
+}
+
+.topbar__theme svg {
+  width: 17px;
+  height: 17px;
+}
+
+/* ---------- Sélecteur de couleur d'accent ---------- */
+
+.accent {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+}
+
+.accent__dot {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.18);
+}
+
+.accent__check {
+  margin-left: auto;
+  color: var(--blue);
+  font-size: 1.1rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+/* Menu déroulant vers le bas : carte floutée alignée à droite du bouton,
+   largeur plafonnée pour rester dans l'écran. Se referme au choix, à Échap
+   ou au toucher extérieur (listener document, aucun voile plein écran). */
+.accent__pop {
+  position: absolute;
+  z-index: 10;
+  top: calc(100% + 8px);
+  right: 0;
+  width: max-content;
+  min-width: 168px;
+  max-width: calc(100vw - 32px);
+  padding: 6px;
+  border: 0.5px solid var(--separator);
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--card) 82%, transparent);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  box-shadow: var(--shadow-pop);
+  animation: rise 0.18s ease both;
+}
+
+.accent__pop .nav__app {
+  padding: 0 10px;
+}
+
+.accent__pop .nav__list {
+  margin-top: 0;
+}
+
+@media (max-width: 30rem) {
+  /* Écrans étroits : le bouton d'actualisation devient une icône pour que
+     la rangée (titre + accent + thème + actualiser) tienne sans déborder. */
+  .topbar__refresh span {
+    display: none;
+  }
+
+  /* Trio supérieur droit en pastilles circulaires 36×36 strictement centrées
+     (accent, thème, refresh) : même taille, icônes 18 px, aucun décalage. */
+  .topbar__theme,
+  .topbar__refresh {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    min-height: 36px;
+    padding: 0;
+    border-radius: 50%;
+  }
+
+  .topbar__theme svg,
+  .topbar__refresh svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.spin {
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.scroll-place {
+  /* Élément normal du flux défilant : ni sticky ni fixe, il glisse et
+     disparaît vers le haut au scroll. En tête de liste, juste au-dessus
+     des filtres : vide égal au-dessus et en dessous (0 + 12 du header
+     = 12 au-dessus, -2 + 14 des carburants = 12 en dessous). */
+  position: static;
+  margin: 0 var(--gutter) -2px;
+  color: var(--label-2);
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+
+.scroll-place strong {
+  color: var(--label);
+  font-weight: 700;
+}
+
+.scroll-place::before {
+  content: "📍 ";
+}
+
+.topbar__error {
+  margin-top: 8px;
+  padding: 10px 12px;
+  border-radius: var(--r-sm);
+  background: var(--red-soft);
+  color: var(--red);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* ---------- Recherche style iOS ---------- */
+
+.where {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.where__field {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+
+.where__input {
+  width: 100%;
+  height: 42px;
+  padding: 0 12px 0 36px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--fill) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%233C3C43' stroke-opacity='0.55' stroke-width='2.4' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.5-3.5'/%3E%3C/svg%3E")
+    12px center no-repeat;
+  color: var(--label);
+  font-size: 1rem;
+}
+
+.where__input::placeholder {
+  color: var(--label-3);
+}
+
+.where__input::-webkit-search-cancel-button {
+  cursor: pointer;
+}
+
+.where__locate {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 42px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--blue);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  white-space: nowrap;
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--blue) 35%, transparent);
+}
+
+.where__locate:active:not(:disabled) {
+  background: var(--blue-pressed);
+}
+
+.where__locate svg {
+  width: 17px;
+  height: 17px;
+}
+
+@media (max-width: 23rem) {
+  .where__locate {
+    padding: 0 12px;
+  }
+  .where__locate-text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+}
+
+.where__results {
+  position: absolute;
+  z-index: 2000;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  overflow: hidden;
+  border-radius: var(--r-md);
+  background: var(--card);
+  box-shadow: var(--shadow-pop);
+  border: 0.5px solid var(--separator);
+}
+
+.where__result {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  min-height: 50px;
+  padding: 10px 14px;
+  border: 0;
+  border-bottom: 0.5px solid var(--separator);
+  background: transparent;
+  text-align: left;
+}
+
+.where__result:last-child {
+  border-bottom: 0;
+}
+
+.where__result:hover {
+  background: var(--fill);
+}
+
+.where__result-name {
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+
+.where__result-detail {
+  color: var(--label-2);
+  font-size: 0.8125rem;
+}
+
+.where__note {
+  padding: 12px 14px;
+  color: var(--label-2);
+  font-size: 0.875rem;
+}
+
+/* ---------- Carburants : chips iOS ---------- */
+
+.fuels {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  /* Garde-fou natif : aucun chaînage du scroll vers la liste des stations,
+     même si un événement molette échappait au JS (FuelPicker). */
+  overscroll-behavior-x: contain;
+  padding: 14px var(--gutter) 8px;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  /* Estompage droit = indice de scroll. Il disparaît en bout de course
+     (.is-end, posé par FuelPicker) pour que le dernier bouton (GPLc) soit
+     entièrement dégagé du bord, sans zone estompée qui le rognerait. */
+  -webkit-mask-image: linear-gradient(to right, black 92%, transparent 100%);
+  mask-image: linear-gradient(to right, black 92%, transparent 100%);
+}
+
+.fuels.is-end {
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
+.fuels::-webkit-scrollbar {
+  display: none;
+}
+
+.fuels__chip {
+  flex: none;
+  min-height: 38px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 999px;
+  /* Identité permanente : teinte officielle du carburant, même au repos. */
+  background: color-mix(in srgb, var(--fuel, var(--blue)) 13%, transparent);
+  color: color-mix(in srgb, var(--fuel, var(--blue)) 72%, var(--label));
+  font-weight: 600;
+  font-size: 0.9375rem;
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--fuel, var(--blue)) 32%, transparent),
+    0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+@media (hover: hover) {
+  .fuels__chip:hover {
+    background: color-mix(in srgb, var(--fuel, var(--blue)) 22%, transparent);
+  }
+}
+
+.fuels__chip[aria-checked="true"] {
+  /* Actif : pastille pleine + double anneau, impossible à rater. */
+  background: var(--fuel, var(--blue));
+  color: var(--fuel-ink, #fff);
+  font-weight: 700;
+  box-shadow:
+    0 0 0 2px var(--card),
+    0 0 0 4px var(--fuel, var(--blue)),
+    0 6px 18px color-mix(in srgb, var(--fuel, var(--blue)) 45%, transparent);
+}
+
+/* ---------- Segmented control iOS ---------- */
+
+.filters {
+  /* Deux colonnes comme avant, mais le rayon (4 boutons) prend plus de place
+     que le tri (2 boutons) pour que « 20 km » ne soit jamais tronqué. */
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 10px;
+  padding: 4px var(--gutter) 0;
+}
+
+@media (max-width: 24rem) {
+  /* Écrans étroits : un filtre par ligne, en pleine largeur, pour que
+     « 20 km » ne soit jamais tronqué (déjà limite vers 375 px). */
+  .filters {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Double affichage des filtres : version flux (mobile, défile avec la liste)
+   et version fixe (ordinateur, hors scroll). Une seule visible à la fois —
+   même état partagé, aucun risque de divergence. */
+.only-desktop {
+  display: none;
+}
+
+@media (min-width: 60rem) {
+  .only-desktop {
+    display: block;
+  }
+
+  .only-mobile {
+    display: none;
+  }
+}
+
+/* Barres de filtres (chips + rayon/tri) toujours au-dessus de la lueur du
+   hero : positionnées + z-index supérieur, sans changer leur place. */
+.fuels,
+.filters {
+  position: relative;
+  z-index: 10;
+}
+
+.segmented {
+  display: flex;
+  padding: 2px;
+  border-radius: 10px;
+  background: var(--fill);
+  min-width: 0;
+}
+
+.segmented__btn {
+  flex: 1;
+  min-height: 30px;
+  min-width: 0;
+  padding: 0 6px;
+  font-size: 0.8125rem;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  font-weight: 500;
+  color: var(--label);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.segmented__btn[aria-checked="true"] {
+  background: var(--card);
+  color: var(--label);
+  font-weight: 600;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.14);
+}
+
+/* Dark mode : pastille active en gris élevé (style iOS sombre), identique
+   sur mobile et ordinateur — pas de pastille quasi noire sur fond noir. */
+:root[data-theme="dark"] .segmented__btn[aria-checked="true"] {
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+}
+
+/* ---------- Prix : typographie SF, plus de pylône ---------- */
+
+.sign {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-family: var(--font-rounded);
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  color: var(--label);
+}
+
+.sign--sm {
+  font-size: 1.12rem;
+}
+
+.sign--xl {
+  font-size: 2.9rem;
+  letter-spacing: -0.04em;
+}
+
+.sign__label {
+  font-family: var(--font);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--fuel-ink, #fff);
+  background: var(--fuel, var(--blue));
+  padding: 3px 7px;
+  border-radius: 6px;
+  align-self: center;
+}
+
+.sign__digits {
+  display: inline-flex;
+  align-items: flex-start;
+}
+
+.sign__sup {
+  margin: 0.12em 0 0 0.05em;
+  font-size: 0.55em;
+  font-weight: 700;
+  color: var(--label-2);
+  line-height: 1;
+}
+
+.sign__sup::after {
+  content: " €/L";
+  font-family: var(--font);
+  font-size: 0.52em;
+  font-weight: 600;
+  letter-spacing: 0;
+  color: var(--label-3);
+  margin-left: 2px;
+}
+
+.sign.is-muted {
+  color: var(--label-3);
+}
+
+.sign.is-muted .sign__digits {
+  text-decoration: line-through;
+  text-decoration-thickness: 0.08em;
+}
+
+.sign.is-muted .sign__label {
+  background: var(--fill-2);
+  color: var(--label-2);
+}
+
+/* ---------- Tendance du prix (↘ baisse verte, ↗ hausse rouge) ---------- */
+
+.trend {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  margin-left: 0.6em;
+  padding: 0.3em 0.6em;
+  border-radius: 999px;
+  font-family: var(--font);
+  font-size: 0.42em;
+  font-weight: 700;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+.trend__arrow {
+  font-size: 1.2em;
+  line-height: 1;
+}
+
+.trend--down {
+  background: var(--green-soft);
+  color: var(--green);
+}
+
+.trend--up {
+  background: var(--red-soft);
+  color: var(--red);
+}
+
+.trend--flat {
+  background: var(--fill);
+  color: var(--label-2);
+}
+
+/* En liste, la pastille reste lisible : 0.42em du prix ferait ~7 px. */
+.sign--sm .trend {
+  font-size: 0.65em;
+}
+
+/* ---------- Hero : carte mise en avant ---------- */
+
+.hero {
+  /* Rapproché des filtres : 12 px en haut (minimum anti-chevauchement,
+     le halo passe sous les filtres en z-index), 24 px sur les côtés,
+     12 px + 16 px du résumé en bas. */
+  margin: 12px 24px 12px;
+  padding: 18px 18px 16px;
+  border-radius: var(--r-lg);
+  background: linear-gradient(135deg, var(--blue) 0%, color-mix(in srgb, var(--blue) 72%, black) 55%, color-mix(in srgb, var(--blue) 52%, black) 100%);
+  color: #fff;
+  /* Glow premium symétrique : offsets 0 0 impératifs (même épaisseur haut /
+     bas / gauche / droite). Suit les coins arrondis via le border-radius.
+     Triple couche centrée : liseré 1 px + halo proche + halo large très
+     diffus (40 px max pour tenir dans les 20 px du haut). !important :
+     prioritaire sur toute autre ombre. */
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--blue) 22%, transparent),
+    0 0 22px 0 color-mix(in srgb, var(--blue) 24%, transparent),
+    0 0 40px 0 color-mix(in srgb, var(--blue) 14%, transparent) !important;
+  position: relative;
+  overflow: hidden;
+  animation: rise 0.4s ease both;
+  /* Marge d'arrêt lue par le scroll App.jsx : 12 px d'air, aucun élément
+     collant au-dessus — bloc du dessus masqué (12-14 < 0). */
+  scroll-margin-top: 12px;
+}
+
+/* Sombre : halo un peu plus présent sur fond noir, toujours centré. */
+:root[data-theme="dark"] .hero {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--blue) 30%, transparent),
+    0 0 24px 0 color-mix(in srgb, var(--blue) 34%, transparent),
+    0 0 44px 0 color-mix(in srgb, var(--blue) 20%, transparent) !important;
+}
+
+.hero .sign {
+  text-shadow: 0 2px 18px rgba(0, 20, 80, 0.45);
+}
+
+/* Pas de ::before/::after sur le hero : ni halo radial ni picto débordant,
+   la carte reste nette, seul son halo doux l'entoure. */
+
+.hero__title {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 10px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.2);
+  padding: 5px 10px 5px 8px;
+  border-radius: 999px;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+.hero__title::before {
+  content: "★";
+  font-size: 0.85em;
+}
+
+.hero__board {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+  position: relative;
+  z-index: 1;
+}
+
+.hero .sign {
+  color: #fff;
+  align-self: flex-start;
+  max-width: 100%;
+}
+
+.hero .sign__sup,
+.hero .sign__sup::after {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.hero .sign__label {
+  background: #fff;
+  color: var(--fuel, var(--blue-pressed));
+}
+
+/* Pastille « stable » sur fond bleu : blanc lisible au lieu du gris
+   (uniquement dans l'encart de mise en avant, la liste est inchangée). */
+.hero .trend--flat {
+  background: rgba(255, 255, 255, 0.22);
+  color: #fff;
+}
+
+.hero__info {
+  min-width: 0;
+}
+
+.hero__info .station-brand {
+  margin-bottom: 5px;
+}
+
+.hero__info .station-brand__name {
+  color: rgba(255, 255, 255, 0.9);
+  white-space: normal;
+  overflow: visible;
+}
+
+.hero__address {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+}
+
+.hero__city,
+.hero__distance {
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.9375rem;
+}
+
+.hero__distance {
+  font-weight: 600;
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+  width: 100%;
+}
+
+.hero .btn--primary {
+  background: #fff;
+  color: var(--blue-pressed);
+  box-shadow: none;
+}
+
+.hero .btn:not(.btn--primary) {
+  border-color: rgba(255, 255, 255, 0.5);
+  color: #fff;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+/* ---------- Résumé et liste groupée ---------- */
+
+.summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px 12px;
+  padding: 16px var(--gutter) 8px;
+}
+
+.summary__text {
+  color: var(--label-2);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.summary__text strong {
+  color: var(--label);
+}
+
+.list {
+  display: grid;
+  gap: 10px;
+  padding: 2px var(--gutter) 0;
+}
+
+.row {
+  border-radius: var(--r-md);
+  background: var(--card);
+  box-shadow: var(--shadow-card);
+  border: 0.5px solid var(--separator);
+  overflow: hidden;
+  animation: rise 0.35s ease backwards;
+  /* Marge d'arrêt lue par le scroll App.jsx : 8 px d'air, aucun élément
+     collant au-dessus — station du dessus masquée (8 < gap 10 px). */
+  scroll-margin-top: 8px;
+}
+
+/* (Valeurs desktop de scroll-margin : voir le bloc Desktop principal.) */
+
+/* Survol (souris uniquement) : la carte se soulève légèrement. */
+@media (hover: hover) {
+  .row {
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+  }
+
+  .row:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-pop), 0 0 20px color-mix(in srgb, var(--blue) 12%, transparent);
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.row.is-open {
+  box-shadow: var(--shadow-pop);
+  border-color: color-mix(in srgb, var(--blue) 45%, var(--separator));
+}
+
+.row__main {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 76px;
+  padding: 13px 14px 13px 12px;
+  border: 0;
+  border-left: 3.5px solid transparent;
+  background: none;
+  text-align: left;
+}
+
+.row.is-open .row__main {
+  border-left-color: var(--blue);
+}
+
+.row__main:focus-visible {
+  outline-offset: -3px;
+}
+
+.row__body {
+  display: grid;
+  gap: 1px;
+  min-width: 0;
+  justify-items: start;
+}
+
+/* ---------- Enseigne (Total, Esso, Leclerc…) ---------- */
+
+.station-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  max-width: 100%;
+  margin-bottom: 3px;
+}
+
+.station-brand__logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  min-width: 26px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 7px;
+  font-size: 0.625rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.12);
+  white-space: nowrap;
+}
+
+.station-brand__name {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--label-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Vrai logo (image) : pastille blanche pour un contraste garanti en clair comme en sombre. */
+.station-brand__img {
+  flex: none;
+  width: 40px;
+  height: 26px;
+  padding: 3px 5px;
+  border-radius: 7px;
+  background: #fff;
+  object-fit: contain;
+  box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.12), 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+/* Grand format : carte « station la moins chère ». */
+.station-brand--lg {
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.station-brand--lg .station-brand__logo {
+  min-width: 48px;
+  height: 46px;
+  padding: 0 10px;
+  border-radius: 14px;
+  font-size: 0.95rem;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25), inset 0 0 0 0.5px rgba(255, 255, 255, 0.35);
+}
+
+.station-brand--lg .station-brand__img {
+  width: 84px;
+  height: 52px;
+  padding: 7px 10px;
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+}
+
+.station-brand--lg .station-brand__name {
+  font-size: 0.9375rem;
+  letter-spacing: 0.06em;
+}
+
+/* Enseigne inconnue : pastille neutre ⛽ pour garder le repère visuel. */
+.station-brand__logo--generic {
+  background: rgba(255, 255, 255, 0.22);
+  color: #fff;
+  font-size: 1.1rem;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+.station-brand--lg .station-brand__logo--generic {
+  min-width: 46px;
+}
+
+.row__address {
+  font-weight: 600;
+  font-size: 0.9375rem;
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+}
+
+.row__city {
+  color: var(--label-2);
+  font-size: 0.8125rem;
+}
+
+.row__status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 8px;
+  margin-top: 3px;
+  font-size: 0.8125rem;
+}
+
+.row__delta {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: var(--green-soft);
+  color: var(--green);
+  font-weight: 700;
+  font-size: 0.75rem;
+}
+
+/* Tendance du prix en liste : simple mention colorée, pas de pastille —
+   info secondaire, elle ne doit ni élargir la colonne prix ni décaler le texte. */
+.row__trend {
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.row__trend--down {
+  color: var(--green);
+}
+
+.row__trend--up {
+  color: var(--red);
+}
+
+.row__trend--flat {
+  color: var(--label-2);
+}
+
+.row__distance {
+  font-family: var(--font);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--label-2);
+  white-space: nowrap;
+  background: var(--fill);
+  padding: 5px 9px;
+  border-radius: 999px;
+  font-variant-numeric: tabular-nums;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 600;
+  font-size: 0.8125rem;
+}
+
+.status__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.status--available {
+  color: var(--green);
+}
+
+.status--temporary,
+.status--unavailable {
+  color: var(--orange);
+}
+
+.status--permanent {
+  color: var(--red);
+}
+
+/* Pas de .status--absent : ce statut est filtré avant tout rendu
+   (App.jsx, tableau des carburants), la règle ne correspondrait jamais. */
+
+.row__more {
+  display: grid;
+  gap: 12px;
+  justify-items: start;
+  padding: 14px 14px 16px;
+  border-top: 0.5px solid var(--separator);
+  margin: 0 0 2px;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tags:empty {
+  display: none;
+}
+
+.tag {
+  padding: 4px 9px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--fill);
+  color: var(--label-2);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.tag--warn {
+  background: var(--orange-soft);
+  color: var(--orange);
+}
+
+.fueltable {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.875rem;
+  border: 0.5px solid var(--separator);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.fueltable th,
+.fueltable td {
+  padding: 9px 10px;
+  text-align: left;
+  font-weight: 400;
+}
+
+.fueltable thead th {
+  background: var(--card-2);
+  color: var(--label-2);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.fueltable tbody tr + tr th,
+.fueltable tbody tr + tr td {
+  border-top: 0.5px solid var(--separator);
+}
+
+.fueltable tbody th {
+  font-weight: 600;
+}
+
+.fueltable .is-current td,
+.fueltable .is-current th {
+  background: var(--blue-soft);
+}
+
+.row__updated,
+.row__services {
+  color: var(--label-2);
+  font-size: 0.8125rem;
+}
+
+/* ---------- Calculateur de plein ---------- */
+
+.calc {
+  justify-self: stretch;
+  min-width: 0;
+  max-width: 100%;
+  /* Padding strictement uniforme sur les 4 côtés : 14 px partout.
+     Le haut (au-dessus de « Calculateur de plein ») est exactement égal
+     au bas (sous « Mon réservoir »), ainsi qu'aux côtés gauche et droit. */
+  padding: 14px;
+  border-radius: var(--r-md);
+  background: var(--fill);
+}
+
+/* Le h3 du titre n'est pas couvert par le reset global : ses marges
+   navigateur (~15 px) s'ajoutaient au padding et doublaient le vide en haut.
+   Ces deux règles garantissent que seul le padding uniforme de .calc
+   définit l'espace en haut et en bas de la carte. */
+.calc > :first-child {
+  margin-top: 0 !important;
+}
+
+.calc > :last-child {
+  margin-bottom: 0 !important;
+}
+
+.calc__title {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+}
+
+.calc__price {
+  margin-top: 1px;
+  color: var(--blue);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.calc__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: end;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.calc__field {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+}
+
+.calc__label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--label-2);
+}
+
+.calc__input {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  height: 48px;
+  padding: 0 12px;
+  border-radius: 12px;
+  border: 0.5px solid var(--separator);
+  background: var(--card);
+  color: var(--label-3);
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+
+.calc__input input {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  border: 0;
+  background: none;
+  padding: 0;
+  color: var(--label);
+  font-weight: 700;
+  font-size: 1.0625rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.calc__input > span:last-child {
+  flex: none;
+}
+
+.calc__input input:focus {
+  outline: none;
+}
+
+.calc__input:focus-within {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px var(--blue-soft);
+}
+
+/* Champs du calculateur : aucun contour bleu au focus, fond uni.
+   Le :focus-visible global (halo bleu) et le fond d'autofill du navigateur
+   sont neutralisés ici pour garder le champ visuellement stable. */
+.calc__input input:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+.calc__input input:-webkit-autofill {
+  -webkit-text-fill-color: var(--label);
+  caret-color: var(--label);
+  box-shadow: 0 0 0 100px var(--card) inset;
+  transition: background-color 9999s ease-in-out 0s;
+}
+
+.calc__input--small {
+  height: 40px;
+}
+
+.calc__swap {
+  padding-bottom: 12px;
+  color: var(--label-3);
+  font-size: 1.1rem;
+}
+
+.calc__result {
+  margin-top: 10px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.calc__tank {
+  display: grid;
+  gap: 5px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 0.5px solid var(--separator);
+}
+
+/* Rangée case + bouton : seuls ces deux éléments sont alignés entre eux,
+   pile sur le même axe (le libellé vit au-dessus, hors rangée). */
+.calc__tank-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.calc__tank-row .calc__input {
+  flex: 1;
+  min-width: 0;
+  /* Même hauteur fixe que le bouton : géométrie absolue, bordures incluses. */
+  height: 40px;
+  box-sizing: border-box;
+}
+
+.calc__tank .btn {
+  flex: none;
+  /* Même hauteur fixe que la case (40 px, bordures incluses) : alignement
+     absolu. Le parent (.calc__tank-row) est en flex + align-items: center.
+     Taille du texte inchangée. */
+  min-height: 0;
+  height: 40px;
+  box-sizing: border-box;
+  margin: 0;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+/* Champ réservoir : strictement identique aux champs Litres/Montant —
+   même conteneur (fond + arrondi 12 px), input transparent sans bordure,
+   suffixe « L » à l'intérieur à droite. Seule la hauteur diffère (40 px,
+   via .calc__input--small). L'anneau de focus vit sur le conteneur
+   (:focus-within de base), comme au-dessus. */
+
+/* ---------- Bouton calculette (à côté d'« Autour de moi ») ---------- */
+
+.where__iconbtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 42px;
+  height: 42px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--fill);
+  color: var(--blue);
+}
+
+.where__iconbtn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.where__iconbtn[aria-expanded="true"] {
+  background: var(--blue);
+  color: #fff;
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--blue) 35%, transparent);
+}
+
+/* ---------- Fenêtre modale du calculateur ---------- */
+
+.sheet-backdrop {
+  /* Overlay racine (rendu via Portal : aucun ancêtre ne peut le contraindre).
+     Au-dessus de tout : barre d'onglets, carte, fiches. */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  background: rgba(0, 0, 0, 0.4);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+  animation: fade-in 0.18s ease both;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.calc-sheet {
+  width: min(100%, 30rem);
+  max-height: 80vh;
+  max-height: 80dvh;
+  overflow-y: auto;
+  /* Plaquée en bas de l'écran : aucune marge sous le bloc blanc (flex-end +
+     marge basse nulle). Coins inférieurs carrés pour épouser le bas de
+     l'écran ; air interne bas via la zone sûre iPhone (20 px sinon). */
+  margin-bottom: 0 !important;
+  /* Air interne équilibré : 20 px en haut, 24 px minimum en bas (zone sûre
+     iPhone au-delà) pour que le bas de la carte respire autant que le haut. */
+  padding: 20px 16px max(24px, env(safe-area-inset-bottom));
+  border: 0.5px solid var(--separator);
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  background: var(--card);
+  box-shadow: var(--shadow-pop);
+  animation: sheet-up 0.25s cubic-bezier(0.3, 1.1, 0.5, 1) both;
+}
+
+@keyframes sheet-up {
+  from {
+    opacity: 0.5;
+    transform: translateY(48px);
+  }
+}
+
+.calc-sheet__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0 2px;
+}
+
+.calc-sheet__title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.calc-sheet__close {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 38px;
+  height: 38px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--fill);
+  color: var(--label-2);
+}
+
+.calc-sheet__close svg {
+  width: 18px;
+  height: 18px;
+}
+
+.calc-sheet .calc {
+  margin-top: 12px;
+}
+
+.calc-sheet__context {
+  margin-top: 2px;
+  margin-bottom: 0;
+  color: var(--label-2);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.calc-sheet__manual {
+  display: grid;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.calc-sheet__empty {
+  margin-top: 12px;
+  color: var(--label-2);
+  font-size: 0.9375rem;
+}
+
+@media (min-width: 60rem) {
+  .sheet-backdrop {
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .calc-sheet {
+    margin: 0;
+    border-bottom: 0.5px solid var(--separator);
+    border-radius: var(--r-xl);
+  }
+}
+
+/* ---------- Très petits écrans : le calculateur s'empile ---------- */
+
+@media (max-width: 22rem) {
+  /* Très petits écrans : litres et montant l'un sous l'autre, jamais côte à côte. */
+  .calc__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .calc__swap {
+    display: none;
+  }
+
+  .calc__tank .btn {
+    width: 100%;
+  }
+}
+
+/* ---------- Boutons et switch iOS ---------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 42px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--fill);
+  color: var(--blue);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  text-decoration: none;
+}
+
+.btn svg {
+  width: 17px;
+  height: 17px;
+}
+
+.btn--primary {
+  background: var(--blue);
+  color: #fff;
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--blue) 32%, transparent);
+}
+
+.btn--primary:active:not(:disabled) {
+  background: var(--blue-pressed);
+}
+
+.btn--small {
+  min-height: 32px;
+  padding: 0 12px;
+  font-size: 0.875rem;
+  border-radius: 9px;
+}
+
+.switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 32px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  color: var(--label-2);
+  font-weight: 500;
+}
+
+.switch input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.switch__track {
+  position: relative;
+  flex: none;
+  width: 51px;
+  height: 31px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--fill-2);
+  transition: background-color 0.2s;
+}
+
+.switch__track::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 27px;
+  height: 27px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.28);
+  transition: transform 0.2s cubic-bezier(0.3, 1.4, 0.5, 1);
+}
+
+.switch input:checked + .switch__track {
+  background: var(--green);
+}
+
+.switch input:checked + .switch__track::after {
+  transform: translateX(20px);
+}
+
+.switch input:focus-visible + .switch__track {
+  outline: 3px solid var(--blue);
+  outline-offset: 2px;
+}
+
+/* ---------- Messages ---------- */
+
+.notice {
+  display: grid;
+  justify-items: start;
+  gap: 8px;
+  margin: 20px var(--gutter);
+  padding: 20px 18px;
+  border: 0.5px solid var(--separator);
+  border-radius: var(--r-lg);
+  background: var(--card);
+  box-shadow: var(--shadow-card);
+  animation: rise 0.35s ease both;
+}
+
+.notice--error {
+  border-color: color-mix(in srgb, var(--red) 40%, var(--separator));
+}
+
+.notice__title {
+  font-size: 1.375rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.notice__text {
+  max-width: 34rem;
+  color: var(--label-2);
+  font-size: 0.9375rem;
+}
+
+.notice__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.banner {
+  margin: 12px var(--gutter) 0;
+  padding: 11px 13px;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: var(--orange-soft);
+  color: var(--orange);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.install {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 12px var(--gutter) 0;
+  padding: 10px 6px 10px 14px;
+  border: 0.5px solid var(--separator);
+  border-radius: var(--r-md);
+  background: var(--card);
+  box-shadow: var(--shadow-card);
+}
+
+.install__text {
+  flex: 1;
+  padding: 2px 0;
+  font-size: 0.8125rem;
+  color: var(--label-2);
+}
+
+.install__icon {
+  vertical-align: -2px;
+  color: var(--blue);
+}
+
+.install__close {
+  display: grid;
+  place-items: center;
+  min-width: 38px;
+  min-height: 38px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--fill);
+  color: var(--label-2);
+}
+
+.skeleton {
+  display: grid;
+  gap: 10px;
+  padding: 12px var(--gutter) 0;
+}
+
+.skeleton__row {
+  height: 84px;
+  border-radius: var(--r-md);
+  background: linear-gradient(100deg, var(--fill) 30%, var(--card) 50%, var(--fill) 70%);
+  background-size: 200% 100%;
+  animation: shimmer 1.3s linear infinite;
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+.credits {
+  /* 22 px au-dessus : séparation nette avec la dernière carte.
+     10 px en dessous : le texte descend près de la barre Liste/Carte. */
+  padding: 22px var(--gutter) 10px;
+  color: var(--label-3);
+  font-size: 0.75rem;
+  text-align: center;
+  text-wrap: balance;
+  line-height: 1.5;
+}
+
+/* Sombre : gris légèrement éclairci pour la lisibilité, reste discret. */
+:root[data-theme="dark"] .credits {
+  color: rgba(235, 235, 245, 0.45);
+}
+
+/* ---------- Carte ---------- */
+
+.map-wrap {
+  position: relative;
+  isolation: isolate;
+  flex: 1;
+  min-height: 0;
+  margin: 0;
+}
+
+.map {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  font-family: var(--font);
+  background: var(--fill);
+}
+
+/* Aura bleue qui descend du haut de la carte (ne bloque aucun toucher). */
+.map-wrap::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 500;
+  pointer-events: none;
+  box-shadow: inset 0 28px 28px -22px color-mix(in srgb, var(--blue) 40%, transparent);
+}
+
+/* Dark : pas de halo/lueur bleue en haut de la carte, mobile comme PC. */
+:root[data-theme="dark"] .map-wrap::after {
+  box-shadow: none;
+}
+
+.map-empty {
+  padding: 32px var(--gutter);
+  color: var(--label-2);
+  text-align: center;
+}
+
+/* Sélecteur de rayon flottant sur la carte (mobile ; masqué sur PC) : changer
+   de rayon sans revenir à la liste. Carte dépolie au-dessus des tuiles, sous
+   la fiche station ; sur mobile le zoom est en bas à droite pour libérer
+   le haut. */
+.map-radius {
+  position: absolute;
+  z-index: 1000;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  /* Barre compacte et discrète : padding vertical réduit. */
+  padding: 4px 8px;
+  border: 0.5px solid var(--separator);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--card) 88%, transparent);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-card);
+}
+
+.map-radius .segmented {
+  background: transparent;
+}
+
+/* Chiffres bien présents : texte agrandi et affirmé pour occuper l'espace
+   (l'overlay pleine largeur absorbe la largeur sans vide). */
+.map-radius .segmented__btn {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* Contrôles Leaflet assortis au thème : pastilles floutées arrondies. */
+.map .leaflet-bar {
+  border: 0.5px solid var(--separator);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+}
+
+.map .leaflet-bar a {
+  border: 0;
+  background: color-mix(in srgb, var(--card) 88%, transparent);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  color: var(--label-2);
+}
+
+.map .leaflet-bar a:hover {
+  background: var(--card);
+  color: var(--blue);
+}
+
+.map .leaflet-control-attribution {
+  border: 0;
+  border-radius: 0;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  color: var(--label-2);
+  font-size: 10px;
+}
+
+.map .leaflet-control-attribution a {
+  color: var(--label-2);
+}
+
+/* Carte sombre : texte gris clair, discret mais lisible directement
+   sur les tuiles (plus de pastille blanche). */
+:root[data-theme="dark"] .map .leaflet-control-attribution,
+:root[data-theme="dark"] .map .leaflet-control-attribution a {
+  color: rgba(255, 255, 255, 0.65);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+.map-sheet {
+  position: absolute;
+  z-index: 1200;
+  left: 10px;
+  right: 10px;
+  /* Remonte au-dessus de la barre d'onglets fixe (60 px + zone sûre + marge),
+     sinon « Y aller / Détails / ✕ » sont masqués et intouchables sur mobile.
+     Inutile sur ordinateur : la fiche y est masquée (display: none). */
+  bottom: max(70px, calc(60px + env(safe-area-inset-bottom)));
+  border: 0.5px solid var(--separator);
+  border-radius: var(--r-lg);
+  background: color-mix(in srgb, var(--card) 88%, transparent);
+  -webkit-backdrop-filter: var(--nav-blur);
+  backdrop-filter: var(--nav-blur);
+  box-shadow: var(--shadow-pop), 0 -10px 28px -14px color-mix(in srgb, var(--blue) 55%, transparent);
+  overflow: hidden;
+}
+
+.row__main--static {
+  min-height: 0;
+  padding: 14px 14px 8px;
+  border-left: 0;
+}
+
+.sheet__actions {
+  display: flex;
+  gap: 8px;
+  padding: 0 14px 14px;
+}
+
+.sheet__actions .btn {
+  flex: 1;
+}
+
+.sheet__actions .sheet__close {
+  margin-left: auto;
+  flex: none;
+}
+
+.btn--icon {
+  min-width: 42px;
+  padding: 0;
+}
+
+.pin-wrap,
+.here-wrap {
+  border: 0;
+  background: none;
+}
+
+.here {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 3.5px solid #fff;
+  border-radius: 50%;
+  background: var(--blue);
+  box-shadow: 0 2px 10px rgba(0, 122, 255, 0.55), 0 0 0 8px rgba(0, 122, 255, 0.18);
+}
+
+.pin {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: inline-flex;
+  align-items: baseline;
+  padding: 6px 9px 5px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.94);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.22);
+  border: 0.5px solid rgba(60, 60, 67, 0.18);
+  /* Fond toujours clair (même en mode sombre) : couleur explicite, pas var(--label). */
+  color: #1c1c1e;
+  font-family: var(--font-rounded);
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+  transform: translate(-50%, calc(-100% - 8px));
+  font-variant-numeric: tabular-nums;
+}
+
+.pin::after {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  margin-left: -5px;
+  border: 5px solid transparent;
+  border-top-color: rgba(255, 255, 255, 0.94);
+  border-bottom: 0;
+}
+
+.pin sup {
+  margin: 1px 0 0 1px;
+  font-size: 0.62em;
+  font-weight: 700;
+  color: rgba(60, 60, 67, 0.65);
+}
+
+.pin--best {
+  background: var(--blue);
+  border-color: transparent;
+  color: #fff;
+  font-size: 15px;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9), 0 4px 20px color-mix(in srgb, var(--blue) 65%, transparent);
+}
+
+.pin--best::after {
+  border-top-color: var(--blue);
+}
+
+.pin--best sup {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.pin--off {
+  background: rgba(120, 120, 128, 0.85);
+  color: #fff;
+}
+
+.pin--off::after {
+  border-top-color: rgba(120, 120, 128, 0.85);
+}
+
+.pin--off sup {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Pastille teintée aux couleurs de l'enseigne (stations dispo, hors « moins cher »). */
+.pin--brand {
+  background: var(--pin-bg, #fff);
+  border-color: transparent;
+  color: var(--pin-fg, #1c1c1e);
+}
+
+.pin--brand::after {
+  border-top-color: var(--pin-bg, #fff);
+}
+
+.pin--brand sup {
+  color: inherit;
+  opacity: 0.72;
+}
+
+/* Flamme de la station la moins chère, juste devant son prix. */
+.pin__fire {
+  margin-right: 3px;
+  font-size: 13px;
+  line-height: 1;
+}
+
+.pin--selected {
+  outline: 2.5px solid var(--blue);
+  outline-offset: 1px;
+}
+
+/* Pastille survolée depuis la liste : agrandie, anneau bleu, au premier plan. */
+.pin--hover {
+  transform: translate(-50%, calc(-100% - 8px)) scale(1.28);
+  box-shadow: 0 0 0 2.5px #fff, 0 0 0 5px var(--blue), 0 6px 18px rgba(0, 0, 0, 0.3);
+  transition: transform 0.15s ease;
+}
+
+/* ---------- Estimation du plein (profil réservoir) ---------- */
+
+.tank-estimate {
+  justify-self: stretch;
+  padding: 10px 12px;
+  border-radius: var(--r-sm);
+  background: var(--blue-soft);
+  color: var(--label);
+  font-size: 0.9375rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.tank-estimate strong {
+  color: var(--blue);
+}
+
+/* ---------- Bouton GPS (Y aller + choix de l'appli) ---------- */
+
+.go {
+  display: inline-flex;
+  gap: 8px;
+  max-width: 100%;
+}
+
+.go__main {
+  flex: 1;
+}
+
+.sheet__actions .go {
+  flex: 1;
+  display: flex;
+}
+
+.sheet__actions .go__switcher {
+  flex: none;
+}
+
+/* ---------- Menu de choix du GPS ---------- */
+
+.nav__list {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.nav__app {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 52px;
+  padding: 0 14px;
+  border: 0.5px solid var(--separator);
+  border-radius: var(--r-md);
+  background: var(--card);
+  color: var(--label);
+  font-weight: 600;
+  text-align: left;
+  text-decoration: none;
+}
+
+.nav__app:active {
+  background: var(--fill);
+}
+
+.nav__app.is-default {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 1px var(--blue);
+}
+
+.nav__name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Variante compacte (menu des couleurs) : lignes moins hautes. */
+.nav__app--compact {
+  min-height: 44px;
+  font-size: 0.875rem;
+}
+
+.nav__default {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--blue-soft);
+  color: var(--blue);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.nav__open {
+  margin-left: auto;
+  color: var(--label-3);
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.nav__always {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  margin-top: 12px;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.nav__always input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--blue);
+}
+
+.nav__forget {
+  margin-top: 4px;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--red);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+/* ---------- Tab bar iOS ---------- */
+
+.tabbar {
+  position: fixed;
+  z-index: 1500;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(100%, var(--max));
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 8px 12px max(10px, env(safe-area-inset-bottom));
+  background: color-mix(in srgb, var(--grouped-bg) 72%, transparent);
+  -webkit-backdrop-filter: var(--nav-blur);
+  backdrop-filter: var(--nav-blur);
+  border-top: 0.5px solid var(--separator);
+}
+
+.tabbar__btn {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 42px;
+  padding: 8px;
+  border: 0;
+  border-radius: 12px;
+  background: none;
+  color: var(--label-2);
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+
+.tabbar__btn svg {
+  width: 19px;
+  height: 19px;
+}
+
+.tabbar__btn[aria-pressed="true"] {
+  color: var(--blue);
+  font-weight: 700;
+  background: var(--blue-soft);
+}
+
+.tabbar :focus-visible {
+  outline-offset: -2px;
+}
+
+/* ---------- Desktop ---------- */
+
+@media (min-width: 60rem) {
+  body {
+    background:
+      radial-gradient(1100px 380px at 50% -140px, color-mix(in srgb, var(--blue) 12%, transparent), transparent 70%),
+      var(--grouped-bg);
+  }
+
+  .app {
+    /* Hauteur verrouillée + overflow déjà posés en base (mobile comme desktop) :
+       ici, seule la gouttière latérale change. */
+    padding: 0 20px;
+  }
+
+  .topbar {
+    position: static;
+    background: transparent;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    border-bottom: 0;
+    padding: 26px 8px 4px;
+  }
+
+  .brand {
+    font-size: 2.4rem;
+  }
+
+  .where {
+    max-width: 34rem;
+  }
+
+  /* Sous les filtres fixes : même vide au-dessus (10) qu'en dessous
+     (-2 + 12 du hero). */
+  .scroll-place {
+    margin: 10px var(--gutter) -2px;
+  }
+
+  /* Instance fixe entre recherche et filtres : style compact, texte très
+     proche des deux côtés, vides symétriques (10 + 4 du header = 14
+     au-dessus, 0 + 14 des carburants = 14 en dessous).
+     Marge gauche nulle : le 📍 s'aligne sur l'axe gauche du champ de
+     recherche (8 px topbar + 20 px app = 8 px layout + 20 px app). */
+  .scroll-place.only-desktop {
+    margin: 10px var(--gutter) 0 0;
+  }
+
+  .layout {
+    flex-direction: row;
+    /* Zéro en haut : on retrouve le contact direct recherche/filtres comme
+       avant (aucun trou). La respiration du halo carte est gérée en bas /
+       à droite + overflow visible (le halo haut déborde sur le fond
+       transparent sans être rogné). Droite 28 px : marge de sécurité pour
+       que le halo ne bute plus contre le bord de la fenêtre. */
+    gap: 28px;
+    padding: 0 28px 28px 8px;
+    align-items: stretch;
+    min-height: 0;
+    overflow: visible;
+  }
+
+  .panel--list {
+    flex: none;
+    /* Colonne resserrée (30 → 28 rem) : la carte gagne ~32 px sans
+       compresser la colonne — recherche, filtres et fiches gardent
+       une largeur confortable et aérée. */
+    width: 28rem;
+    padding-bottom: 0;
+    border-radius: var(--r-xl);
+  }
+
+  /* Le scroll vit dans .list-scroll (l'en-tête chips + filtres est fixe).
+     Bas resserré comme sur iPhone : 10 px du bloc + 4 px = 14 px sous
+     le texte (pas de barre fixe sur desktop). */
+  .list-scroll {
+    padding-bottom: 4px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--fill-2) transparent;
+  }
+
+  .app.view-list .layout > .panel--map {
+    display: flex;
+  }
+
+  .app.view-map .layout > .panel--list {
+    display: block;
+  }
+
+  .panel--map {
+    border-radius: 20px;
+    /* Visible impératif : le conteneur ne doit pas couper le halo porté par
+       .map-wrap. Les tuiles restent clipsées par .map-wrap (radius 20 + hidden).
+       Pas d'ombre ici : halo unique sur le conteneur interne.
+       Haut sur l'axe de la rangée des boutons carburants (10 localisation
+       + 22 texte + 0 + 14 padding chips = 46 px), bas ancré par le stretch :
+       la carte remplit l'espace entre ces deux repères, largeur intacte. */
+    overflow: visible !important;
+    margin-top: 46px;
+    min-width: 0;
+    border: 0.5px solid color-mix(in srgb, var(--blue) 30%, var(--separator));
+  }
+
+  .list-scroll::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .list-scroll::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background: var(--fill-2);
+  }
+
+  .map-wrap {
+    border-radius: 20px;
+    overflow: hidden;
+    /* Remplit toute la hauteur du panneau (lui-même étiré à hauteur de
+       la liste) : bord inférieur exactement aligné sur la colonne. */
+    flex: 1;
+    /* Carte flottante : glow premium parfaitement symétrique (offsets 0 0).
+       Porté par le conteneur interne arrondi : il épouse exactement les
+       coins (radius 20) sans être rogné par le parent (overflow visible).
+       Triple couche centrée : liseré + halo proche + halo large diffus
+       (48 px max pour tenir dans la gouttière). */
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--blue) 16%, transparent),
+      0 0 26px 0 color-mix(in srgb, var(--blue) 18%, transparent),
+      0 0 48px 0 color-mix(in srgb, var(--blue) 12%, transparent) !important;
+  }
+
+  :root[data-theme="dark"] .map-wrap {
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--blue) 24%, transparent),
+      0 0 28px 0 color-mix(in srgb, var(--blue) 30%, transparent),
+      0 0 52px 0 color-mix(in srgb, var(--blue) 18%, transparent) !important;
+  }
+
+  /* PC : carte comme avant — pas de pastille rayon (réservée au mobile). */
+  .map-radius {
+    display: none;
+  }
+
+  /* PC : la rangée carburants reste sur une seule ligne (aucun changement
+     de placement). Le défilement horizontal se fait à la molette verticale
+     (voir FuelPicker) : aucun scroll vertical ici, aucune barre visible. */
+  .only-desktop .fuels {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+
+  .tabbar,
+  .map-sheet {
+    display: none;
+  }
+}
+
+/* ---------- Mouvement réduit ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .spin,
+  .skeleton__row,
+  .row,
+  .hero,
+  .notice,
+  .sheet-backdrop,
+  .calc-sheet,
+  .accent__pop {
+    animation: none;
+  }
+
+  button,
+  .row {
+    transition: none;
+  }
+
+  .switch__track::after {
+    transition: none;
+  }
+
+  .pin--hover {
+    transform: translate(-50%, calc(-100% - 8px));
+  }
+}

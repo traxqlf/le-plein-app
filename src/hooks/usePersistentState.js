@@ -1,0 +1,8 @@
+import { useEffect, useState } from "react";
+import { readJSON, writeJSON } from "../lib/storage.js";
+
+export default function usePersistentState(key, initial) {
+  const [value, setValue] = useState(() => readJSON(key, initial));
+  useEffect(() => writeJSON(key, value), [key, value]);
+  return [value, setValue];
+}

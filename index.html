@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Le Plein – prix et disponibilité des carburants</title>
+    <meta
+      name="description"
+      content="Prix officiels et ruptures de stock des stations-service autour de vous, actualisés toutes les 10 minutes."
+    />
+    <meta name="theme-color" content="#f2f2f7" />
+    <script>
+      /* Thème + accent appliqués avant le premier rendu : évite un flash.
+         Même logique que src/lib/theme.js et src/lib/accent.js. */
+      try {
+        var lpTheme = JSON.parse(localStorage.getItem("leplein:theme") || '"system"');
+        var lpDark =
+          lpTheme === "dark" ||
+          (lpTheme !== "light" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+        document.documentElement.dataset.theme = lpDark ? "dark" : "light";
+        document
+          .querySelector('meta[name="theme-color"]')
+          .setAttribute("content", lpDark ? "#000000" : "#f2f2f7");
+        var lpAccent = JSON.parse(localStorage.getItem("leplein:accent") || '"blue"');
+        if (["blue", "purple", "pink", "orange", "green"].indexOf(lpAccent) !== -1) {
+          document.documentElement.dataset.accent = lpAccent;
+        }
+      } catch (e) {
+        /* stockage indisponible : thème clair et accent bleu par défaut */
+      }
+    </script>
+
+    <link rel="icon" href="/favicon.png" type="image/png" sizes="64x64" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <!-- iOS : mode application une fois ajoutée à l'écran d'accueil -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Le Plein" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
