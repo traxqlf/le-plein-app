@@ -46,7 +46,7 @@
 
 /* Thème sombre : choix manuel prioritaire (`data-theme="dark"`), sinon
    l'appareil quand aucun choix n'est fait (voir le script anti-flash de
-   index.html et l'effet thème de App.jsx). */
+   index.html et l'effet thème de App.tsx). */
 :root[data-theme="dark"] {
   --grouped-bg: #000000;
   --card: #1c1c1e;
@@ -894,7 +894,7 @@ a {
   position: relative;
   overflow: hidden;
   animation: rise 0.4s ease both;
-  /* Marge d'arrêt lue par le scroll App.jsx : 12 px d'air, aucun élément
+  /* Marge d'arrêt lue par le scroll App.tsx : 12 px d'air, aucun élément
      collant au-dessus — bloc du dessus masqué (12-14 < 0). */
   scroll-margin-top: 12px;
 }
@@ -1055,7 +1055,7 @@ a {
   border: 0.5px solid var(--separator);
   overflow: hidden;
   animation: rise 0.35s ease backwards;
-  /* Marge d'arrêt lue par le scroll App.jsx : 8 px d'air, aucun élément
+  /* Marge d'arrêt lue par le scroll App.tsx : 8 px d'air, aucun élément
      collant au-dessus — station du dessus masquée (8 < gap 10 px). */
   scroll-margin-top: 8px;
 }
@@ -1305,7 +1305,7 @@ a {
 }
 
 /* Pas de .status--absent : ce statut est filtré avant tout rendu
-   (App.jsx, tableau des carburants), la règle ne correspondrait jamais. */
+   (App.tsx, tableau des carburants), la règle ne correspondrait jamais. */
 
 .row__more {
   display: grid;

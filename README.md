@@ -17,6 +17,7 @@ Node.js 20.19 ou plus récent.
 npm install          # installe les dépendances
 npm run dev          # serveur de dev sur http://localhost:5173
 npm test             # tests unitaires (normalisation des données, prix, distances)
+npm run typecheck    # vérification TypeScript (tsc --noEmit)
 npm run build        # construit le site dans dist/
 npm run preview      # sert dist/ (le service worker PWA n'existe qu'en build)
 
@@ -56,10 +57,10 @@ de prévisualisation (Vercel/Netlify), ou un tunnel HTTPS (`npx cloudflared tunn
 
 ```
 src/
-  App.jsx                  état global, tri/filtre, mise en page
-  lib/api.js               appels API + normalisation des champs (à adapter si le schéma change)
-  lib/fuels.js             carburants et libellés de disponibilité
-  lib/format.js, geo.js    prix, dates, distances, lien d'itinéraire
+  App.tsx                  état global, tri/filtre, mise en page
+  lib/api.ts               appels API + normalisation des champs (à adapter si le schéma change)
+  lib/fuels.ts             carburants et libellés de disponibilité
+  lib/format.ts, geo.ts    prix, dates, distances, lien d'itinéraire
   hooks/                   position, stations (rafraîchies toutes les 10 min), installation PWA
   components/              PriceSign (le « pylône »), StationRow, StationMap, ...
   styles.css               tout le design (variables en tête de fichier)
@@ -69,7 +70,7 @@ vite.config.js             manifest PWA + stratégie de cache hors-ligne
 
 ## Points à connaître
 
-- **Champs de l'API** : `src/lib/api.js` suppose les noms `<carburant>_prix`,
+- **Champs de l'API** : `src/lib/api.ts` suppose les noms `<carburant>_prix`,
   `<carburant>_maj`, `carburants_rupture_temporaire`, `carburants_rupture_definitive`,
   `carburants_indisponibles`, `geom`. Si l'écran reste vide, ouvrez la console du navigateur :
   un avertissement indique si le schéma a changé. Comparez avec
@@ -77,5 +78,5 @@ vite.config.js             manifest PWA + stratégie de cache hors-ligne
 - **Les noms d'enseigne ne sont pas dans ce jeu de données** : la liste affiche l'adresse.
 - **La disponibilité** est celle que les stations déclarent, pas un comptage en temps réel.
 - **Tuiles OpenStreetMap** : correct pour un projet perso ; pour un fort trafic, passez à un
-  fournisseur de tuiles dédié (MapTiler, Stadia…) en changeant l'URL dans `StationMap.jsx`
-  et dans `vite.config.js`.
+  fournisseur de tuiles dédié (MapTiler, Stadia…) en changeant l'URL dans `StationMap.tsx`
+  et dans `vite.config.ts`.
